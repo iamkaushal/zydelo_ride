@@ -1,0 +1,14 @@
+asgiref==3.3.1
+Django==3.1.6
+django-crispy-forms==1.11.0
+flake8==3.8.4
+importlib-metadata==3.4.0
+mccabe==0.6.1
+Pillow==8.1.0
+psycopg2==2.8.6
+pycodestyle==2.6.0
+pyflakes==2.2.0
+pytz==2021.1
+sqlparse==0.4.1
+typing-extensions==3.7.4.3
+zipp==3.4.0

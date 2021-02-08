@@ -1,0 +1,60 @@
+{% extends "rides/base.html" %}
+{% block content %}
+  <article class="media content-section">
+    <div class="media-body">
+      <div class="article-metadata">
+        {% if ride.driver == user %}
+          {% if ride.status == "Pending" %}
+            <div>
+              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'ride-update' ride.id %}">Update</a>
+              <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'ride-delete' ride.id %}">Delete</a>
+              <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'ride-finish' ride.id %}">Finish This Ride</a>
+            </div>
+          {% else %}
+          <h2 class="btn btn-primary btn-sm mt-1 mb-1">Ride: {{ ride.status }}</h2>
+          {% endif %}
+        {% endif %}
+      </div>
+      <h2 class="article-title">{{ object.title }}</h2>
+      {% if post.image %}
+        <img class="img-thumbnail" src="{{ ride.image.url }}">
+      {% endif %}
+
+        Driver's email: {{ ride.driver.email  }}
+      <p class="article-content"> <strong>Start time:</strong> {{ ride.start_time }} </p>
+      <p class="article-content"> <strong>From:</strong> {{ ride.source_location }}</p>
+      <p class="article-content"> <strong>To:</strong> {{ ride.destination_location }}</p>
+      <p class="article-content"> <strong>Number of seats: </strong> {{ ride.number_of_seats }}</p>
+      <p class="article-content"> <strong>Number of seats booked: </strong> {{ ride.trips.count }}</p>
+      {% if ride.number_of_seats == ride.trips.count %}
+        <p class="article-content"> <strong>number_of_seats_booked: </strong> {{ ride.trips.count }}</p>
+      {% endif %}
+
+      <strong>Driver: </strong>
+       <a class="mr-2" href="{% url 'user-rides' ride.driver.username %}">{{ ride.driver  }}</a>
+       <br>
+      <strong>Riders:</strong>
+      {% for trip in ride.trips.all %}
+        <br>
+        <span class="article-content">{{ trip.rider }} </span>
+      {% endfor %}
+
+      <div class="article-metadata">
+
+        {% if ride.number_of_seats > ride.trips.count   %}
+          {% if ride.driver != user %}
+            {% if not already_requested %}
+              <form action="{% url 'create-request' ride.id %}" method="get">
+                {% csrf_token %}
+                <button class="btn btn-success" type="submit" name="button">Request Ride</button>
+              </form>
+            {% else %}
+                  <a href="{% url 'user-requested' %}"><button class="btn btn-success"  name="button">Already Requested (Check Status)</button></a>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      </div>
+
+    </div>
+  </article>
+{% endblock content %}
