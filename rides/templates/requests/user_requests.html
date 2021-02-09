@@ -23,7 +23,7 @@
             {% if request.ride.driver == user %}
               {% if request.status == "Pending" %}
               <div class="article-metadata">
-                <form action="{% url 'approve-request' request.id  %}" method="post">
+                <form action="{% url 'approve-request' request.id  %}" method="POST">
                   {% csrf_token %}
                   <button class="btn btn-success" type="submit" name="button" value='profile_user'>Approve</button>
                 </form>

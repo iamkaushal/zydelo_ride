@@ -180,6 +180,7 @@ class UserPaymentListView(LoginRequiredMixin, ListView):
         ).order_by("-generated_time")
         return payments_list
 
+
 class UserPaymentRecievedListView(LoginRequiredMixin, ListView):
     '''View to list all the payments recieved by a user'''
     model = Payment
@@ -201,7 +202,20 @@ def approve_request_view(request, req):
     '''function based view to approve a ride request'''
     if request.method == "POST":
         req_to_approve = get_object_or_404(Request, id=req)
+
+        # reject request if seats are already full
+        if req_to_approve.ride.trips.all().count() >= (
+            req_to_approve.ride.number_of_seats
+        ):
+            req_to_approve.reject()
+
         req_to_approve.approve()
+        # reject all pending requests after seats are full
+        if req_to_approve.ride.trips.all().count() == (
+            req_to_approve.ride.number_of_seats
+        ):
+            for req in req_to_approve.ride.requests.filter(status='Pending'):
+                req.reject()
         return redirect("user-requests")
     else:
         return redirect("home")

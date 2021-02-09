@@ -41,10 +41,10 @@
 
       <div class="article-metadata">
 
-        {% if ride.number_of_seats > ride.trips.count   %}
+        {% if ride.number_of_seats > ride.trips.count %}
           {% if ride.driver != user %}
             {% if not already_requested %}
-              <form action="{% url 'create-request' ride.id %}" method="get">
+              <form action="{% url 'create-request' ride.id %}" method="POST">
                 {% csrf_token %}
                 <button class="btn btn-success" type="submit" name="button">Request Ride</button>
               </form>
